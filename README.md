@@ -44,7 +44,7 @@ src/main/java/com/.../sgcl/
 ├── service/        # Camada de Negócio (Regras de validação e duplicidade)
 ├── repository/     # Camada de Acesso a Dados (Spring Data JPA / Queries)
 └── model/          # Entidades de Domínio mapeadas para tabelas do MySQL
-
+```
 ---
 
 ## Diagramas UML (avaliação final)
