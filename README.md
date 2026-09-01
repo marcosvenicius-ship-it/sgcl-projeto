@@ -44,3 +44,15 @@ src/main/java/com/.../sgcl/
 ├── service/        # Camada de Negócio (Regras de validação e duplicidade)
 ├── repository/     # Camada de Acesso a Dados (Spring Data JPA / Queries)
 └── model/          # Entidades de Domínio mapeadas para tabelas do MySQL
+
+---
+
+## Modelagem e Arquitetura do Sistema
+
+Documentação técnica e visual da engenharia do SGCL desenvolvida para a AC1:
+
+* 📊 **Diagrama de Casos de Uso (UML):**  
+  👉 [Visualizar Diagrama de Casos de Uso](https://github.com/marcosvenicius-ship-it/sgcl-projeto/blob/main/docs/diagrama-casos-de-uso.png)
+
+* 🏛️ **Diagrama de Classes (Domínio & Arquitetura):**  
+  👉 [Visualizar Diagrama de Classes](https://github.com/marcosvenicius-ship-it/sgcl-projeto/blob/main/docs/diagrama-classes.png)
