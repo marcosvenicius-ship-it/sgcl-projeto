@@ -47,12 +47,11 @@ src/main/java/com/.../sgcl/
 
 ---
 
-## Modelagem e Arquitetura do Sistema
+## Diagramas UML (avaliação final)
 
-Documentação técnica e visual da engenharia do SGCL desenvolvida para a AC1:
+Documentação arquitetural em [docs/](docs/):
 
-* 📊 **Diagrama de Casos de Uso (UML):**  
-  👉 [Visualizar Diagrama de Casos de Uso](https://github.com/marcosvenicius-ship-it/sgcl-projeto/blob/main/docs/diagrama-casos-de-uso.png)
+* [Diagrama de casos de uso](docs/diagrama-casos-de-uso.png)
+* [Diagrama de classes](docs/diagrama-classes.png)
 
-* 🏛️ **Diagrama de Classes (Domínio & Arquitetura):**  
-  👉 [Visualizar Diagrama de Classes](https://github.com/marcosvenicius-ship-it/sgcl-projeto/blob/main/docs/diagrama-classes.png)
+Mais detalhes em [docs/README.md](docs/README.md).
