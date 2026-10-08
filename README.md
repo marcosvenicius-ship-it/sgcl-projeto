@@ -51,14 +51,12 @@ src/main/java/com/.../sgcl/
 
 Documentação arquitetural em [docs/](docs/):
 
-##AC1
+### AC1
+* [Diagrama de casos de uso](docs/casos_de_uso_ac1.png)
+* [Diagrama de classes](docs/diagrama_classes_ac1.png)
 
-* [Diagrama de casos de uso](docs/diagrama-casos-de-uso.png)
-* [Diagrama de classes](docs/diagrama-classes.png)
-
-##AC2
-
-* [Diagrama de casos de uso2](docs/diagrama-casos-de-uso.png)
-* [Diagrama de classes2](docs/diagrama-classes.png)
+### AC2
+* [Diagrama de casos de uso](docs/casos_de_uso_ac2.png)
+* [Diagrama de classes](docs/diagrama_classes_ac2.png)
 
 Mais detalhes em [docs/README.md](docs/README.md).
