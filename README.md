@@ -56,7 +56,7 @@ Documentação arquitetural em [docs/](docs/):
 * [Diagrama de classes](docs/diagrama_classes_ac1.png)
 
 ### AC2
-* [Diagrama de casos de uso](docs/casos_de_uso_ac2.png)
-* [Diagrama de classes](docs/diagrama_classes_ac2.png)
+* [Diagrama de casos de uso](docs/diagrama-casos-de-uso2.png)
+* [Diagrama de classes](docs/diagrama-de-classes2.png)
 
 Mais detalhes em [docs/README.md](docs/README.md).
