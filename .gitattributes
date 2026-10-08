@@ -1,2 +1,31 @@
 # Auto detect text files and perform LF normalization
-* text=auto
+* text=auto eol=lf
+
+# Código-fonte Java e configurações do Spring Boot
+*.java text diff=java eol=lf
+*.properties text eol=lf
+*.xml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Frontend Web
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+
+# Documentação e Scripts SQL
+*.md text eol=lf
+*.sql text eol=lf
+
+# Scripts Maven (Windows vs Linux/Mac)
+mvnw text eol=lf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Ficheiros Binários e Imagens (não alterar)
+*.jar binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
