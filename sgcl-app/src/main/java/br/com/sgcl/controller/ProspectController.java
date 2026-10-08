@@ -2,7 +2,6 @@ package br.com.sgcl.controller;
 
 import br.com.sgcl.model.Prospect;
 import br.com.sgcl.service.ProspectService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/prospects")
+@RequestMapping("/prospects")
 @CrossOrigin(origins = "*")
 public class ProspectController {
 
@@ -20,19 +19,38 @@ public class ProspectController {
         this.prospectService = prospectService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<Prospect>> listarTodos() {
+        return ResponseEntity.ok(prospectService.listarTodos());
+    }
+
     @PostMapping
-    public ResponseEntity<?> cadastrar(@Valid @RequestBody Prospect prospect) {
+    public ResponseEntity<?> cadastrarProspect(@RequestBody Prospect prospect) {
         try {
-            Prospect prospectSalvo = prospectService.cadastrarProspect(prospect);
-            return ResponseEntity.status(HttpStatus.CREATED).body(prospectSalvo);
+            Prospect novoProspect = prospectService.cadastrarProspect(prospect);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novoProspect);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    @GetMapping
-    public ResponseEntity<List<Prospect>> listar() {
-        List<Prospect> prospects = prospectService.listarTodos();
-        return ResponseEntity.ok(prospects);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizarProspect(@PathVariable Long id, @RequestBody Prospect prospect) {
+        try {
+            Prospect prospectAtualizado = prospectService.atualizarProspect(id, prospect);
+            return ResponseEntity.ok(prospectAtualizado);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletarProspect(@PathVariable Long id) {
+        try {
+            prospectService.deletarProspect(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }
