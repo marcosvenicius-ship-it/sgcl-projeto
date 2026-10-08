@@ -1,46 +1,106 @@
-body {
-    background-color: #f1f5f9;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    --indigo-primary: #4f46e5;
+    --indigo-hover: #4338ca;
+    --bg-main: #f8fafc;
+    --border-light: #e2e8f0;
 }
 
-.card-header-custom {
-    background-color: #0f172a;
-    color: #ffffff;
+body {
+    background-color: var(--bg-main);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1e293b;
+}
+
+.max-w-container {
+    max-width: 1400px;
 }
 
 .status-indicator {
-    width: 10px;
-    height: 10px;
-    background-color: #22c55e;
+    width: 8px;
+    height: 8px;
+    background-color: #10b981;
     border-radius: 50%;
     display: inline-block;
-    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
-.badge-etapa-novo {
-    background-color: #0284c7;
-    color: #ffffff;
-    font-weight: 600;
-    padding: 0.4em 0.7em;
-    border-radius: 4px;
+.fs-7 {
+    font-size: 0.75rem;
 }
 
-.badge-origem {
-    background-color: #e2e8f0;
-    color: #334155;
-    font-weight: 500;
-    padding: 0.35em 0.65em;
-    border-radius: 4px;
-}
-
-.table th {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    color: #64748b;
+.fs-8 {
+    font-size: 0.70rem;
 }
 
 .card {
-    border-radius: 8px;
-    overflow: hidden;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid var(--border-light) !important;
+}
+
+.bg-indigo-soft {
+    background-color: #e0e7ff;
+}
+
+.text-indigo {
+    color: var(--indigo-primary);
+}
+
+.btn-indigo {
+    background-color: var(--indigo-primary) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+.btn-indigo:hover {
+    background-color: var(--indigo-hover) !important;
+}
+
+/* Estilização do Quadro Kanban */
+.kanban-column {
+    background-color: #f1f5f9 !important;
+    min-height: 280px;
+}
+
+.kanban-cards-container {
+    min-height: 220px;
+}
+
+.kanban-item {
+    background-color: #ffffff !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.border-top-primary {
+    border-top: 4px solid #4f46e5 !important;
+}
+
+.border-top-warning {
+    border-top: 4px solid #f59e0b !important;
+}
+
+.border-top-info {
+    border-top: 4px solid #0284c7 !important;
+}
+
+.border-top-purple {
+    border-top: 4px solid #9333ea !important;
+}
+
+.border-top-success {
+    border-top: 4px solid #10b981 !important;
+}
+
+.bg-purple {
+    background-color: #9333ea !important;
+}
+
+.btn-xs {
+    font-size: 0.75rem;
+    text-decoration: none;
+    font-weight: 600;
 }

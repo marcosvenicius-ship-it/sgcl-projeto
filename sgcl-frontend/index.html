@@ -4,35 +4,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGCL — Gestão de Leads</title>
-    <!-- Bootstrap 5 para layout responsivo -->
+    <title>SGCL — Gestão de Leads e Funil</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Estilo Customizado -->
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="container py-4">
-        <!-- Cabeçalho da Aplicação -->
+    <div class="container-fluid max-w-container py-4">
         <header
-            class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 pb-3 border-bottom">
+            class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 p-4 card border-0">
             <div>
-                <h2 class="fw-bold mb-1 text-dark">SGCL — Gestão de Oportunidades</h2>
-                <p class="text-secondary mb-0 fs-6">Painel Operacional de Captação e Rastreamento Comercial</p>
-            </div>
-            <div class="mt-2 mt-md-0">
-                <span class="badge bg-light text-dark border px-3 py-2 fw-semibold">
-                    Versão 1.0 • Módulo de Entrada
-                </span>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <h2 class="fw-bold text-dark mb-0 fs-4">SGCL — Gestão de Oportunidades</h2>
+                </div>
+                <p class="text-secondary mb-0 fs-6">Pipeline Comercial • Quadro Kanban e Filtros de Captação</p>
             </div>
         </header>
 
-        <div class="row g-4">
-            <!-- Formulário de Cadastro de Prospect -->
+        <div class="card border-0 p-3 mb-4">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <label for="filtroEtapa" class="form-label fw-semibold fs-7 mb-1 text-muted">FILTRAR POR
+                        ETAPA</label>
+                    <select id="filtroEtapa" class="form-select" onchange="aplicarFiltros()">
+                        <option value="TODAS">Todas as Etapas</option>
+                        <option value="NOVO">Novo</option>
+                        <option value="QUALIFICACAO">Qualificação</option>
+                        <option value="PROPOSTA">Proposta</option>
+                        <option value="NEGOCIACAO">Negociação</option>
+                        <option value="FECHAMENTO">Fechamento</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="filtroOrigem" class="form-label fw-semibold fs-7 mb-1 text-muted">FILTRAR POR CANAL DE
+                        CAPTAÇÃO</label>
+                    <select id="filtroOrigem" class="form-select" onchange="aplicarFiltros()">
+                        <option value="TODOS">Todos os Canais</option>
+                        <option value="SITE">Site Institucional</option>
+                        <option value="RD_STATION">Marketing</option>
+                        <option value="INDICACAO">Indicação Comercial</option>
+                        <option value="EVENTO">Feira / Evento</option>
+                        <option value="OUTRO">Outro Canal</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end justify-content-md-end">
+                    <button onclick="carregarProspects()"
+                        class="btn btn-light border fw-semibold w-100 w-md-auto mt-3 mt-md-0">
+                        ↻ Atualizar Dados
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
             <div class="col-lg-4">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header card-header-custom py-3">
-                        <h5 class="card-title mb-0 fs-6 fw-bold">Novo Prospect</h5>
+                <div class="card border-0">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h5 class="card-title mb-0 fs-6 fw-bold text-dark">Cadastrar Prospect</h5>
                     </div>
                     <div class="card-body p-4">
                         <form id="formProspect">
@@ -80,7 +108,19 @@
                                 </select>
                             </div>
 
-                            <button type="submit" id="btnSalvar" class="btn btn-primary w-100 fw-bold py-2 mt-2">
+                            <div class="mb-3">
+                                <label for="etapaFunil" class="form-label fw-semibold">Estágio Inicial <span
+                                        class="text-danger">*</span></label>
+                                <select id="etapaFunil" class="form-select" required>
+                                    <option value="NOVO" selected>Novo</option>
+                                    <option value="QUALIFICACAO">Qualificação</option>
+                                    <option value="PROPOSTA">Proposta</option>
+                                    <option value="NEGOCIACAO">Negociação</option>
+                                    <option value="FECHAMENTO">Fechamento</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" id="btnSalvar" class="btn btn-indigo w-100 fw-bold py-2 mt-2">
                                 Cadastrar Prospect
                             </button>
                         </form>
@@ -88,30 +128,25 @@
                 </div>
             </div>
 
-            <!-- Tabela de Listagem de Prospects -->
             <div class="col-lg-8">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0 fs-6 fw-bold text-dark">Prospects Registrados no Sistema</h5>
-                        <button onclick="carregarProspects()" class="btn btn-sm btn-outline-secondary">
-                            ↻ Atualizar
-                        </button>
+                <div class="card border-0">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h5 class="card-title mb-0 fs-6 fw-bold text-dark">Base Cadastral de Prospects</h5>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light">
+                                <thead>
                                     <tr>
                                         <th>ID</th>
                                         <th>Contato</th>
-                                        <th>Telefone</th>
                                         <th>Empresa / CNPJ</th>
                                         <th>Origem</th>
-                                        <th>Etapa</th>
+                                        <th>Estágio</th>
+                                        <th class="text-center">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tabelaProspects">
-                                    <!-- Conteúdo injetado dinamicamente pelo JavaScript -->
                                 </tbody>
                             </table>
                         </div>
@@ -119,9 +154,84 @@
                 </div>
             </div>
         </div>
+
+        <div class="mb-4">
+            <h5 class="fw-bold mb-3 text-dark">Pipeline Comercial (Quadro de Estágios)</h5>
+            <div class="row g-3" id="kanbanBoard">
+            </div>
+        </div>
     </div>
 
-    <!-- Script de Integração -->
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title fw-bold">Transição de Estágio / Edição</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="formEditarProspect">
+                        <input type="hidden" id="editId">
+
+                        <div class="mb-3">
+                            <label for="editNome" class="form-label fw-semibold">Nome Completo</label>
+                            <input type="text" id="editNome" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editEmail" class="form-label fw-semibold">E-mail Corporativo</label>
+                            <input type="email" id="editEmail" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editTelefone" class="form-label fw-semibold">Telefone / WhatsApp</label>
+                            <input type="text" id="editTelefone" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editEmpresa" class="form-label fw-semibold">Empresa</label>
+                            <input type="text" id="editEmpresa" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editCnpj" class="form-label fw-semibold">CNPJ</label>
+                            <input type="text" id="editCnpj" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editOrigem" class="form-label fw-semibold">Canal de Origem</label>
+                            <select id="editOrigem" class="form-select" required>
+                                <option value="SITE">Site Institucional</option>
+                                <option value="RD_STATION">Marketing</option>
+                                <option value="INDICACAO">Indicação Comercial</option>
+                                <option value="EVENTO">Feira / Evento</option>
+                                <option value="OUTRO">Outro Canal</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editEtapaFunil" class="form-label fw-semibold">Estágio do Funil</label>
+                            <select id="editEtapaFunil" class="form-select" required>
+                                <option value="NOVO">Novo</option>
+                                <option value="QUALIFICACAO">Qualificação</option>
+                                <option value="PROPOSTA">Proposta</option>
+                                <option value="NEGOCIACAO">Negociação</option>
+                                <option value="FECHAMENTO">Fechamento</option>
+                            </select>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <button type="button" class="btn btn-light border fw-semibold"
+                                data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-indigo fw-bold">Salvar e Transicionar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
 </body>
 
