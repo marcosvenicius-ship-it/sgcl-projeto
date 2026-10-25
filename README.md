@@ -59,4 +59,8 @@ Documentação arquitetural em [docs/](docs/):
 * [Diagrama de casos de uso](docs/diagrama-casos-de-uso2.png)
 * [Diagrama de classes](docs/diagrama-de-classes2.png)
 
+### AC3
+* [Diagrama de casos de uso](docs/diagrama-casos-de-uso3.png)
+* [Diagrama de classes](docs/diagrama-de-classes3.png)
+
 Mais detalhes em [docs/README.md](docs/README.md).
