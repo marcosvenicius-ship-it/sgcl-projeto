@@ -4,7 +4,6 @@ import br.com.sgcl.model.Prospect;
 import br.com.sgcl.repository.ProspectRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -16,41 +15,44 @@ public class ProspectService {
         this.prospectRepository = prospectRepository;
     }
 
-    public Prospect cadastrarProspect(Prospect prospect) {
-        if (prospectRepository.existsByEmail(prospect.getEmail())) {
-            throw new IllegalArgumentException("Já existe um prospect cadastrado com este e-mail.");
-        }
-        prospect.setDataCadastro(LocalDateTime.now());
-        return prospectRepository.save(prospect);
-    }
-
     public List<Prospect> listarTodos() {
         return prospectRepository.findAll();
     }
 
-    public Prospect atualizarProspect(Long id, Prospect prospectAtualizado) {
-        Prospect prospectExistente = prospectRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Lead não encontrado com o ID: " + id));
+    public Prospect cadastrarProspect(Prospect prospect) {
+        if (prospectRepository.existsByEmail(prospect.getEmail())) {
+            throw new IllegalArgumentException("E-mail já cadastrado na base.");
+        }
+        return prospectRepository.save(prospect);
+    }
 
-        if (!prospectExistente.getEmail().equalsIgnoreCase(prospectAtualizado.getEmail()) &&
-                prospectRepository.existsByEmail(prospectAtualizado.getEmail())) {
-            throw new IllegalArgumentException("O novo e-mail informado já está em uso por outro lead.");
+    public Prospect atualizarProspect(Long id, Prospect prospect) {
+        Prospect existente = prospectRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Prospect não encontrado com o ID: " + id));
+
+        if (!existente.getEmail().equals(prospect.getEmail()) && prospectRepository.existsByEmail(prospect.getEmail())) {
+            throw new IllegalArgumentException("E-mail já pertence a outro prospect.");
         }
 
-        prospectExistente.setNome(prospectAtualizado.getNome());
-        prospectExistente.setEmail(prospectAtualizado.getEmail());
-        prospectExistente.setTelefone(prospectAtualizado.getTelefone());
-        prospectExistente.setEmpresa(prospectAtualizado.getEmpresa());
-        prospectExistente.setCnpj(prospectAtualizado.getCnpj());
-        prospectExistente.setOrigem(prospectAtualizado.getOrigem());
-        prospectExistente.setEtapaFunil(prospectAtualizado.getEtapaFunil());
+        existente.setNome(prospect.getNome());
+        existente.setEmail(prospect.getEmail());
+        existente.setTelefone(prospect.getTelefone());
+        existente.setEmpresa(prospect.getEmpresa());
+        existente.setCnpj(prospect.getCnpj());
+        existente.setOrigem(prospect.getOrigem());
+        existente.setEtapaFunil(prospect.getEtapaFunil());
 
-        return prospectRepository.save(prospectExistente);
+        // Atualizações vitais da AC3:
+        existente.setUsuario(prospect.getUsuario());
+        existente.setStatusFinal(prospect.getStatusFinal());
+        existente.setMotivoPerda(prospect.getMotivoPerda());
+
+        return prospectRepository.save(existente);
     }
 
     public void deletarProspect(Long id) {
         if (!prospectRepository.existsById(id)) {
-            throw new IllegalArgumentException("Lead não encontrado para exclusão.");
+            throw new IllegalArgumentException("Prospect não encontrado para exclusão.");
         }
         prospectRepository.deleteById(id);
     }

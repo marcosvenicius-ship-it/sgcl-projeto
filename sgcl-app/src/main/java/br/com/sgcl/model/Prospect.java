@@ -42,6 +42,22 @@ public class Prospect {
     @Column(name = "data_cadastro", nullable = false, updatable = false)
     private LocalDateTime dataCadastro;
 
+    // --- NOVOS CAMPOS AC3 ---
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_final", nullable = false, length = 20)
+    private StatusFinalEnum statusFinal = StatusFinalEnum.EM_ANDAMENTO;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "motivo_perda", length = 50)
+    private MotivoPerdaEnum motivoPerda;
+
+    // ------------------------
+
     public Prospect() {}
 
     @PrePersist
@@ -49,9 +65,13 @@ public class Prospect {
         if (this.etapaFunil == null || this.etapaFunil.isBlank()) {
             this.etapaFunil = "NOVO";
         }
+        if (this.statusFinal == null) {
+            this.statusFinal = StatusFinalEnum.EM_ANDAMENTO;
+        }
         this.dataCadastro = LocalDateTime.now();
     }
 
+    // Getters e Setters Atuais
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -78,4 +98,14 @@ public class Prospect {
 
     public LocalDateTime getDataCadastro() { return dataCadastro; }
     public void setDataCadastro(LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
+
+    // Novos Getters e Setters AC3
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
+    public StatusFinalEnum getStatusFinal() { return statusFinal; }
+    public void setStatusFinal(StatusFinalEnum statusFinal) { this.statusFinal = statusFinal; }
+
+    public MotivoPerdaEnum getMotivoPerda() { return motivoPerda; }
+    public void setMotivoPerda(MotivoPerdaEnum motivoPerda) { this.motivoPerda = motivoPerda; }
 }
