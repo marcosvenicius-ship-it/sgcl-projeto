@@ -1,9 +1,10 @@
 package br.com.sgcl.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "prospect")
@@ -13,99 +14,91 @@ public class Prospect {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "O nome é obrigatório")
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String nome;
 
-    @NotBlank(message = "O e-mail é obrigatório")
-    @Email(message = "Informe um e-mail válido")
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank(message = "O telefone é obrigatório")
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     private String telefone;
 
-    @Column(length = 100)
     private String empresa;
-
-    @Column(length = 18)
     private String cnpj;
+    private BigDecimal valor;
 
-    @NotBlank(message = "A origem é obrigatória")
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     private String origem;
 
-    @Column(name = "etapa_funil", nullable = false, length = 30)
+    @Column(name = "etapa_funil", nullable = false)
     private String etapaFunil;
 
-    @Column(name = "data_cadastro", nullable = false, updatable = false)
-    private LocalDateTime dataCadastro;
+    @Column(name = "status_final")
+    private String statusFinal = "EM_ANDAMENTO";
 
-    // --- NOVOS CAMPOS AC3 ---
+    @Column(name = "motivo_perda")
+    private String motivoPerda;
+
+    @Column(name = "data_criacao", nullable = false)
+    private LocalDateTime dataCriacao = LocalDateTime.now();
+
+    @Column(name = "data_fechamento")
+    private LocalDateTime dataFechamento;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "senha"})
     private Usuario usuario;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status_final", nullable = false, length = 20)
-    private StatusFinalEnum statusFinal = StatusFinalEnum.EM_ANDAMENTO;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "motivo_perda", length = 50)
-    private MotivoPerdaEnum motivoPerda;
-
-    // ------------------------
+    @OneToMany(mappedBy = "prospect", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("prospect")
+    private List<Interacao> interacoes;
 
     public Prospect() {}
 
     @PrePersist
     public void prePersist() {
-        if (this.etapaFunil == null || this.etapaFunil.isBlank()) {
-            this.etapaFunil = "NOVO";
+        if (this.dataCriacao == null) {
+            this.dataCriacao = LocalDateTime.now();
         }
-        if (this.statusFinal == null) {
-            this.statusFinal = StatusFinalEnum.EM_ANDAMENTO;
-        }
-        this.dataCadastro = LocalDateTime.now();
     }
 
-    // Getters e Setters Atuais
+    @PreUpdate
+    public void preUpdate() {
+        if (("GANHO".equals(this.statusFinal) || "PERDIDO".equals(this.statusFinal)) && this.dataFechamento == null) {
+            this.dataFechamento = LocalDateTime.now();
+        }
+    }
+
+    // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
-
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
-
     public String getEmpresa() { return empresa; }
     public void setEmpresa(String empresa) { this.empresa = empresa; }
-
     public String getCnpj() { return cnpj; }
     public void setCnpj(String cnpj) { this.cnpj = cnpj; }
-
+    public BigDecimal getValor() { return valor; }
+    public void setValor(BigDecimal valor) { this.valor = valor; }
     public String getOrigem() { return origem; }
     public void setOrigem(String origem) { this.origem = origem; }
-
     public String getEtapaFunil() { return etapaFunil; }
     public void setEtapaFunil(String etapaFunil) { this.etapaFunil = etapaFunil; }
-
-    public LocalDateTime getDataCadastro() { return dataCadastro; }
-    public void setDataCadastro(LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
-
-    // Novos Getters e Setters AC3
+    public String getStatusFinal() { return statusFinal; }
+    public void setStatusFinal(String statusFinal) { this.statusFinal = statusFinal; }
+    public String getMotivoPerda() { return motivoPerda; }
+    public void setMotivoPerda(String motivoPerda) { this.motivoPerda = motivoPerda; }
+    public LocalDateTime getDataCriacao() { return dataCriacao; }
+    public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
+    public LocalDateTime getDataFechamento() { return dataFechamento; }
+    public void setDataFechamento(LocalDateTime dataFechamento) { this.dataFechamento = dataFechamento; }
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
-
-    public StatusFinalEnum getStatusFinal() { return statusFinal; }
-    public void setStatusFinal(StatusFinalEnum statusFinal) { this.statusFinal = statusFinal; }
-
-    public MotivoPerdaEnum getMotivoPerda() { return motivoPerda; }
-    public void setMotivoPerda(MotivoPerdaEnum motivoPerda) { this.motivoPerda = motivoPerda; }
+    public List<Interacao> getInteracoes() { return interacoes; }
+    public void setInteracoes(List<Interacao> interacoes) { this.interacoes = interacoes; }
 }

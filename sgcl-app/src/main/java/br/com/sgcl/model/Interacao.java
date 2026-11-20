@@ -1,9 +1,7 @@
 package br.com.sgcl.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,30 +12,28 @@ public class Interacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 30)
-    private TipoInteracaoEnum tipo;
+    @Column(nullable = false)
+    private String tipo;
 
-    @NotBlank
     @Column(nullable = false, columnDefinition = "TEXT")
     private String descricao;
 
-    @Column(name = "data_registro", nullable = false, updatable = false)
+    @Column(name = "data_registro", nullable = false)
     private LocalDateTime dataRegistro = LocalDateTime.now();
 
-    @JsonIgnore // <-- VITAL PARA EVITAR ERRO DE LOOP CIRCULAR NO JSON
     @ManyToOne
     @JoinColumn(name = "prospect_id", nullable = false)
+    @JsonIgnoreProperties("interacoes")
     private Prospect prospect;
 
     public Interacao() {}
 
+    // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public TipoInteracaoEnum getTipo() { return tipo; }
-    public void setTipo(TipoInteracaoEnum tipo) { this.tipo = tipo; }
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
 
     public String getDescricao() { return descricao; }
     public void setDescricao(String descricao) { this.descricao = descricao; }

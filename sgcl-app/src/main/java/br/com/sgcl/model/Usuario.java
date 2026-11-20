@@ -1,7 +1,6 @@
 package br.com.sgcl.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "usuario")
@@ -11,16 +10,19 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String nome;
 
-    @NotBlank
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
+    private String senha;
+
+    @Column(nullable = false)
+    private String perfil; // GESTOR ou VENDEDOR
+
+    @Column(nullable = false)
     private String cargo;
 
     public Usuario() {}
@@ -33,6 +35,12 @@ public class Usuario {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
+
+    public String getPerfil() { return perfil; }
+    public void setPerfil(String perfil) { this.perfil = perfil; }
 
     public String getCargo() { return cargo; }
     public void setCargo(String cargo) { this.cargo = cargo; }
