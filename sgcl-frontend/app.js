@@ -549,6 +549,12 @@ async function cadastrarProspect(event) {
         ? parseInt(document.getElementById("usuarioSelect").value)
         : usuarioLogado.id;
 
+    const usuarioId = document.getElementById("usuarioSelect").value;
+    if (!usuarioId) {
+        alert("Por favor, selecione o responsável comercial.");
+        return;
+    }
+
     const prospect = {
         nome: document.getElementById("nome").value,
         email: document.getElementById("email").value,
@@ -576,9 +582,10 @@ async function cadastrarProspect(event) {
     }
 }
 
-function prepararEdicao(id) {
-    const item = prospectsGerais.find(p => p.id === id);
-    if (!item) return;
+async function abrirHistorico(prospectId, nome) {
+    document.getElementById("interacaoProspectId").value = prospectId;
+    document.getElementById("historicoNomeProspect").innerText = nome;
+    document.getElementById("interacaoDescricao").value = "";
 
     document.getElementById("editId").value = item.id;
     document.getElementById("editNome").value = item.nome || "";
