@@ -4,234 +4,529 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGCL — Gestão de Leads e Funil</title>
+    <title>SGCL — Gestão Comercial & Indicadores</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="container-fluid max-w-container py-4">
-        <header
-            class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 p-4 card border-0">
-            <div>
-                <div class="d-flex align-items-center gap-2 mb-1">
-                    <h2 class="fw-bold text-dark mb-0 fs-4">SGCL — Gestão de Oportunidades</h2>
-                </div>
-                <p class="text-secondary mb-0 fs-6">Pipeline Comercial • Quadro Kanban e Filtros de Captação</p>
-            </div>
-        </header>
 
-        <div class="card border-0 p-3 mb-4">
-            <div class="row g-3 align-items-center">
-                <div class="col-md-4">
-                    <label for="filtroEtapa" class="form-label fw-semibold fs-7 mb-1 text-muted">FILTRAR POR
-                        ETAPA</label>
-                    <select id="filtroEtapa" class="form-select" onchange="aplicarFiltros()">
-                        <option value="TODAS">Todas as Etapas</option>
-                        <option value="NOVO">Novo</option>
-                        <option value="QUALIFICACAO">Qualificação</option>
-                        <option value="PROPOSTA">Proposta</option>
-                        <option value="NEGOCIACAO">Negociação</option>
-                        <option value="FECHAMENTO">Fechamento</option>
-                    </select>
+    <!-- ==================== TELA DE AUTENTICAÇÃO (LOGIN E REGISTRO) ==================== -->
+    <div id="telaLogin" class="container d-flex align-items-center justify-content-center min-vh-100">
+        <div class="card p-4 shadow-sm" style="max-width: 440px; width: 100%;">
+            <div class="text-center mb-4">
+                <h3 class="fw-bold text-dark mb-1">SGCL CRM</h3>
+                <p id="subtituloAuth" class="text-muted fs-7">Acesso ao Sistema de Gestão de Oportunidades</p>
+            </div>
+
+            <!-- FORMULÁRIO DE LOGIN -->
+            <form id="formLogin">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold fs-7">E-mail Corporativo</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="ex: marcos.gestor@sgcl.com"
+                        required>
                 </div>
-                <div class="col-md-4">
-                    <label for="filtroOrigem" class="form-label fw-semibold fs-7 mb-1 text-muted">FILTRAR POR CANAL DE
-                        CAPTAÇÃO</label>
-                    <select id="filtroOrigem" class="form-select" onchange="aplicarFiltros()">
-                        <option value="TODOS">Todos os Canais</option>
-                        <option value="SITE">Site Institucional</option>
-                        <option value="RD_STATION">Marketing</option>
-                        <option value="INDICACAO">Indicação Comercial</option>
-                        <option value="EVENTO">Feira / Evento</option>
-                        <option value="OUTRO">Outro Canal</option>
-                    </select>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold fs-7">Senha</label>
+                    <input type="password" id="loginSenha" class="form-control" placeholder="••••••" required>
                 </div>
-                <div class="col-md-4 d-flex align-items-end justify-content-md-end">
-                    <button onclick="carregarProspects()"
-                        class="btn btn-light border fw-semibold w-100 w-md-auto mt-3 mt-md-0">
-                        ↻ Atualizar Dados
+                <div id="loginErro" class="alert alert-danger py-2 fs-7 d-none"></div>
+                <button type="submit" class="btn btn-indigo w-100 fw-semibold py-2">Entrar no Sistema</button>
+
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-link text-dark fs-8 fw-semibold p-0"
+                        onclick="alternarModoAuth('registro')">
+                        Não tem conta? Criar novo usuário
+                    </button>
+                </div>
+            </form>
+
+            <!-- FORMULÁRIO DE CRIAÇÃO DE CONTA -->
+            <form id="formRegistro" class="d-none">
+                <div class="mb-2">
+                    <label class="form-label fw-semibold fs-7">Nome Completo *</label>
+                    <input type="text" id="regNome" class="form-control" placeholder="Ex: João Pedro" required>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label fw-semibold fs-7">E-mail Corporativo *</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="joao@sgcl.com" required>
+                </div>
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <label class="form-label fw-semibold fs-7">Senha *</label>
+                        <input type="password" id="regSenha" class="form-control" placeholder="••••••" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label fw-semibold fs-7">Perfil de Acesso *</label>
+                        <select id="regPerfil" class="form-select">
+                            <option value="VENDEDOR">Vendedor</option>
+                            <option value="GESTOR">Gestor</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold fs-7">Cargo</label>
+                    <input type="text" id="regCargo" class="form-control" placeholder="Ex: SDR / Executivo de Contas">
+                </div>
+                <div id="regErro" class="alert alert-danger py-2 fs-7 d-none"></div>
+                <button type="submit" class="btn btn-indigo w-100 fw-semibold py-2">Cadastrar e Entrar</button>
+
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-link text-dark fs-8 fw-semibold p-0"
+                        onclick="alternarModoAuth('login')">
+                        ← Já tenho conta (Voltar ao Login)
+                    </button>
+                </div>
+            </form>
+
+            <div id="blocoDemoAuth" class="mt-4 pt-3 border-top">
+                <p class="text-muted fs-8 text-center mb-2">Acesso rápido (senha padrão: <strong>123456</strong>):</p>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-dark w-50 fs-8"
+                        onclick="preencherLoginDemo('marcos.gestor@sgcl.com', '123456')">
+                        👑 Perfil Gestor
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary w-50 fs-8"
+                        onclick="preencherLoginDemo('ana.vendas@sgcl.com', '123456')">
+                        👤 Perfil Vendedor
                     </button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="row g-4 mb-4">
-            <div class="col-lg-4">
-                <div class="card border-0">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <h5 class="card-title mb-0 fs-6 fw-bold text-dark">Cadastrar Prospect</h5>
+    <!-- ==================== SISTEMA PRINCIPAL ==================== -->
+    <div id="telaSistema" class="container-fluid max-w-container py-4 d-none">
+
+        <!-- HEADER AZUL PASTEL COM PERFIL LOGADO, ALTERAR SENHA E LOGOUT -->
+        <header
+            class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 p-4 card border-0 bg-primary-subtle border-start border-4 border-primary">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <h2 class="fw-bold text-dark mb-0 fs-4">SGCL — Gestão de Oportunidades</h2>
+                    <span id="badgePerfilUsuario" class="badge bg-dark text-white fs-8"></span>
+                </div>
+                <p class="text-secondary mb-0 fs-6">Pipeline Comercial • Histórico de Interações & Indicadores de
+                    Conversão</p>
+            </div>
+
+            <div class="d-flex align-items-center gap-2 mt-3 mt-md-0">
+                <div class="text-end me-2">
+                    <div id="nomeUsuarioLogado" class="fw-bold text-dark fs-7"></div>
+                    <small id="cargoUsuarioLogado" class="text-muted fs-8"></small>
+                </div>
+                <button class="btn btn-sm btn-outline-secondary" onclick="abrirModalSenha()">🔑 Alterar Senha</button>
+                <button class="btn btn-sm btn-outline-dark" onclick="fazerLogout()">Sair</button>
+            </div>
+        </header>
+
+        <!-- NAVEGAÇÃO ENTRE DASHBOARD (RELATÓRIOS) E OPERAÇÃO (KANBAN/BASE) -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+            <ul class="nav nav-pills gap-2" id="abasSistema">
+                <li class="nav-item" id="navItemDashboard">
+                    <button class="nav-link active fw-semibold" id="btnAbaDashboard" onclick="alternarAba('dashboard')">
+                        📊 Dashboard & Relatórios
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-semibold" id="btnAbaOperacao" onclick="alternarAba('operacao')">
+                        📋 Pipeline Kanban & Base
+                    </button>
+                </li>
+            </ul>
+
+            <div class="d-flex gap-2">
+                <button id="btnExportarCSV" class="btn btn-sm btn-outline-dark fw-semibold"
+                    onclick="exportarRelatorioCSV()">
+                    📥 Exportar Relatório Geral (CSV)
+                </button>
+                <button class="btn btn-sm btn-indigo fw-semibold" onclick="atualizarTudo()">
+                    ↻ Atualizar Dados
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== SEÇÃO 1: DASHBOARD & INDICADORES ==================== -->
+        <section id="secaoDashboard">
+            <div class="alert alert-light border d-flex justify-content-between align-items-center py-2 px-3 mb-3">
+                <span id="tituloEscopoDashboard" class="fw-semibold fs-7 text-dark"></span>
+                <span id="badgeEscopoDashboard" class="badge bg-secondary fs-8"></span>
+            </div>
+
+            <!-- Cards de KPIs -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="card p-3 h-100">
+                        <span class="text-muted fs-8 text-uppercase fw-bold">Total de Leads</span>
+                        <h2 id="kpiTotalLeads" class="fw-bold text-dark my-2">0</h2>
+                        <small class="text-muted fs-8">Base ativa e encerrada</small>
                     </div>
-                    <div class="card-body p-4">
-                        <form id="formProspect">
-                            <div class="mb-3">
-                                <label for="nome" class="form-label fw-semibold">Nome Completo <span
-                                        class="text-danger">*</span></label>
-                                <input type="text" id="nome" class="form-control" placeholder="Ex: Marcos Venicius"
-                                    required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="email" class="form-label fw-semibold">E-mail Corporativo <span
-                                        class="text-danger">*</span></label>
-                                <input type="email" id="email" class="form-control" placeholder="marcos@empresa.com.br"
-                                    required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="telefone" class="form-label fw-semibold">Telefone / WhatsApp <span
-                                        class="text-danger">*</span></label>
-                                <input type="text" id="telefone" class="form-control" placeholder="(11) 98765-4321"
-                                    required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="empresa" class="form-label fw-semibold">Empresa</label>
-                                <input type="text" id="empresa" class="form-control" placeholder="Nome da empresa">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="cnpj" class="form-label fw-semibold">CNPJ</label>
-                                <input type="text" id="cnpj" class="form-control" placeholder="00.000.000/0001-00">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="origem" class="form-label fw-semibold">Canal de Origem <span
-                                        class="text-danger">*</span></label>
-                                <select id="origem" class="form-select" required>
-                                    <option value="" disabled selected>Selecione o canal...</option>
-                                    <option value="SITE">Site Institucional</option>
-                                    <option value="RD_STATION">Marketing</option>
-                                    <option value="INDICACAO">Indicação Comercial</option>
-                                    <option value="EVENTO">Feira / Evento</option>
-                                    <option value="OUTRO">Outro Canal</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="etapaFunil" class="form-label fw-semibold">Estágio Inicial <span
-                                        class="text-danger">*</span></label>
-                                <select id="etapaFunil" class="form-select" required>
-                                    <option value="NOVO" selected>Novo</option>
-                                    <option value="QUALIFICACAO">Qualificação</option>
-                                    <option value="PROPOSTA">Proposta</option>
-                                    <option value="NEGOCIACAO">Negociação</option>
-                                    <option value="FECHAMENTO">Fechamento</option>
-                                </select>
-                            </div>
-
-                            <button type="submit" id="btnSalvar" class="btn btn-indigo w-100 fw-bold py-2 mt-2">
-                                Cadastrar Prospect
-                            </button>
-                        </form>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-3 h-100">
+                        <span class="text-muted fs-8 text-uppercase fw-bold">Taxa de Conversão</span>
+                        <h2 id="kpiTaxaConversao" class="fw-bold text-success my-2">0%</h2>
+                        <small id="kpiSubConversao" class="text-muted fs-8">0 vendas ganhas</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-3 h-100">
+                        <span class="text-muted fs-8 text-uppercase fw-bold">Tempo Médio no Funil</span>
+                        <h2 id="kpiTempoMedio" class="fw-bold text-dark my-2">0 dias</h2>
+                        <small class="text-muted fs-8">Ciclo médio de atendimento</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-3 h-100">
+                        <span class="text-muted fs-8 text-uppercase fw-bold">Receita Fechada (Ganha)</span>
+                        <h2 id="kpiReceitaGanha" class="fw-bold text-primary my-2">R$ 0,00</h2>
+                        <small class="text-muted fs-8">Oportunidades convertidas</small>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-8">
-                <div class="card border-0">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <h5 class="card-title mb-0 fs-6 fw-bold text-dark">Base Cadastral de Prospects</h5>
+            <!-- Gráficos -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-6">
+                    <div class="card p-4 h-100">
+                        <h5 class="fw-bold fs-6 mb-1">Funil de Conversão por Etapa</h5>
+                        <p class="text-muted fs-8 mb-3">Distribuição de leads e percentual de conversão em cada estágio
+                        </p>
+                        <div style="height: 280px;">
+                            <canvas id="graficoEtapas"></canvas>
+                        </div>
                     </div>
-                    <div class="card-body p-0">
+                </div>
+                <div class="col-lg-6">
+                    <div class="card p-4 h-100">
+                        <h5 class="fw-bold fs-6 mb-1">Desempenho por Canal de Captação</h5>
+                        <p class="text-muted fs-8 mb-3">Comparativo entre Site, RD Station, Indicação e Eventos</p>
+                        <div style="height: 280px;">
+                            <canvas id="graficoCanais"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela Analítica -->
+            <div class="card p-4">
+                <h5 class="fw-bold fs-6 mb-3">Detalhamento de Conversão por Canal de Captação</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Canal de Captação</th>
+                                <th>Leads Gerados</th>
+                                <th>Vendas Ganhas</th>
+                                <th>Taxa de Conversão</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaMetricasCanais"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SEÇÃO 2: OPERAÇÃO (KANBAN, CADASTRO E BASE) ==================== -->
+        <section id="secaoOperacao" class="d-none">
+            <!-- Filtros -->
+            <div class="card p-3 mb-4">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label fs-7 fw-semibold">Filtrar por Etapa do Funil</label>
+                        <select id="filtroEtapa" class="form-select" onchange="aplicarFiltros()">
+                            <option value="TODAS">Todas as Etapas</option>
+                            <option value="NOVO">1. Novo</option>
+                            <option value="QUALIFICACAO">2. Qualificação</option>
+                            <option value="PROPOSTA">3. Proposta</option>
+                            <option value="NEGOCIACAO">4. Negociação</option>
+                            <option value="FECHAMENTO">5. Fechamento</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fs-7 fw-semibold">Filtrar por Canal</label>
+                        <select id="filtroOrigem" class="form-select" onchange="aplicarFiltros()">
+                            <option value="TODOS">Todos os Canais</option>
+                            <option value="SITE">Site</option>
+                            <option value="RD_STATION">RD Station (Marketing)</option>
+                            <option value="INDICACAO">Indicação</option>
+                            <option value="EVENTO">Evento</option>
+                            <option value="OUTRO">Outro</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3" id="divFiltroVendedorGestor">
+                        <label class="form-label fs-7 fw-semibold">Filtrar por Vendedor (Gestor)</label>
+                        <select id="filtroVendedor" class="form-select" onchange="aplicarFiltros()">
+                            <option value="TODOS">Toda a Equipe Comercial</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 text-md-end">
+                        <span id="avisoPermissao"
+                            class="badge bg-warning-subtle text-dark py-2 px-3 fs-8 text-wrap"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quadro Kanban -->
+            <div class="row g-3 mb-4" id="kanbanBoard"></div>
+
+            <!-- Cadastro + Tabela -->
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="card p-4">
+                        <h5 class="fw-bold fs-6 mb-3">Novo Prospect / Lead</h5>
+                        <form id="formProspect">
+                            <div class="mb-2">
+                                <label class="form-label fs-7 fw-semibold">Nome do Contato *</label>
+                                <input type="text" id="nome" class="form-control" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fs-7 fw-semibold">E-mail *</label>
+                                <input type="email" id="email" class="form-control" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fs-7 fw-semibold">Telefone *</label>
+                                <input type="text" id="telefone" class="form-control" required>
+                            </div>
+                            <div class="row g-2 mb-2">
+                                <div class="col-7">
+                                    <label class="form-label fs-7 fw-semibold">Empresa</label>
+                                    <input type="text" id="empresa" class="form-control">
+                                </div>
+                                <div class="col-5">
+                                    <label class="form-label fs-7 fw-semibold">Valor (R$)</label>
+                                    <input type="number" step="0.01" id="valor" class="form-control" value="0">
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label fs-7 fw-semibold">CNPJ</label>
+                                <input type="text" id="cnpj" class="form-control">
+                            </div>
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label fs-7 fw-semibold">Canal (Origem)</label>
+                                    <select id="origem" class="form-select">
+                                        <option value="SITE">Site</option>
+                                        <option value="RD_STATION">RD Station</option>
+                                        <option value="INDICACAO">Indicação</option>
+                                        <option value="EVENTO">Evento</option>
+                                        <option value="OUTRO">Outro</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label fs-7 fw-semibold">Etapa Inicial</label>
+                                    <select id="etapaFunil" class="form-select">
+                                        <option value="NOVO">1. Novo</option>
+                                        <option value="QUALIFICACAO">2. Qualificação</option>
+                                        <option value="PROPOSTA">3. Proposta</option>
+                                        <option value="NEGOCIACAO">4. Negociação</option>
+                                        <option value="FECHAMENTO">5. Fechamento</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fs-7 fw-semibold">Responsável Comercial *</label>
+                                <select id="usuarioSelect" class="form-select" required></select>
+                            </div>
+                            <button type="submit" class="btn btn-indigo w-100 fw-semibold">Cadastrar
+                                Oportunidade</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="card p-4">
+                        <h5 class="fw-bold fs-6 mb-3" id="tituloTabelaProspects">Base Geral de Oportunidades</h5>
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
+                            <table class="table table-hover align-middle">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Contato</th>
-                                        <th>Empresa / CNPJ</th>
-                                        <th>Origem</th>
-                                        <th>Estágio</th>
+                                        <th>Lead</th>
+                                        <th>Empresa / Valor</th>
+                                        <th>Responsável</th>
+                                        <th>Canal</th>
+                                        <th>Etapa / Status</th>
                                         <th class="text-center">Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tabelaProspects">
-                                </tbody>
+                                <tbody id="tabelaProspects"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="mb-4">
-            <h5 class="fw-bold mb-3 text-dark">Pipeline Comercial (Quadro de Estágios)</h5>
-            <div class="row g-3" id="kanbanBoard">
-            </div>
-        </div>
+        </section>
     </div>
 
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0">
-                <div class="modal-header border-bottom">
-                    <h5 class="modal-title fw-bold">Transição de Estágio / Edição</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- MODAL ALTERAR SENHA -->
+    <div class="modal fade" id="modalAlterarSenha" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content p-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold fs-6">🔑 Alterar Minha Senha</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body p-4">
-                    <form id="formEditarProspect">
-                        <input type="hidden" id="editId">
-
+                <div class="modal-body">
+                    <form id="formAlterarSenha">
+                        <div class="mb-2">
+                            <label class="form-label fs-7 fw-semibold">Senha Atual *</label>
+                            <input type="password" id="senhaAtual" class="form-control" required>
+                        </div>
                         <div class="mb-3">
-                            <label for="editNome" class="form-label fw-semibold">Nome Completo</label>
-                            <input type="text" id="editNome" class="form-control" required>
+                            <label class="form-label fs-7 fw-semibold">Nova Senha *</label>
+                            <input type="password" id="novaSenha" class="form-control" minlength="4" required>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="editEmail" class="form-label fw-semibold">E-mail Corporativo</label>
-                            <input type="email" id="editEmail" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="editTelefone" class="form-label fw-semibold">Telefone / WhatsApp</label>
-                            <input type="text" id="editTelefone" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="editEmpresa" class="form-label fw-semibold">Empresa</label>
-                            <input type="text" id="editEmpresa" class="form-control">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="editCnpj" class="form-label fw-semibold">CNPJ</label>
-                            <input type="text" id="editCnpj" class="form-control">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="editOrigem" class="form-label fw-semibold">Canal de Origem</label>
-                            <select id="editOrigem" class="form-select" required>
-                                <option value="SITE">Site Institucional</option>
-                                <option value="RD_STATION">Marketing</option>
-                                <option value="INDICACAO">Indicação Comercial</option>
-                                <option value="EVENTO">Feira / Evento</option>
-                                <option value="OUTRO">Outro Canal</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="editEtapaFunil" class="form-label fw-semibold">Estágio do Funil</label>
-                            <select id="editEtapaFunil" class="form-select" required>
-                                <option value="NOVO">Novo</option>
-                                <option value="QUALIFICACAO">Qualificação</option>
-                                <option value="PROPOSTA">Proposta</option>
-                                <option value="NEGOCIACAO">Negociação</option>
-                                <option value="FECHAMENTO">Fechamento</option>
-                            </select>
-                        </div>
-
-                        <div class="d-flex justify-content-end gap-2 mt-4">
-                            <button type="button" class="btn btn-light border fw-semibold"
-                                data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-indigo fw-bold">Salvar e Transicionar</button>
-                        </div>
+                        <div id="msgSenha" class="alert py-2 fs-8 d-none"></div>
+                        <button type="submit" class="btn btn-indigo w-100 fw-semibold">Salvar Nova Senha</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- MODAL EDITAR PROSPECT -->
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content p-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Editar Oportunidade</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarProspect">
+                        <input type="hidden" id="editId">
+                        <div class="mb-2">
+                            <label class="form-label fs-7 fw-semibold">Nome</label>
+                            <input type="text" id="editNome" class="form-control" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label fs-7 fw-semibold">E-mail</label>
+                            <input type="email" id="editEmail" class="form-control" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label fs-7 fw-semibold">Telefone</label>
+                            <input type="text" id="editTelefone" class="form-control" required>
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col-7">
+                                <label class="form-label fs-7 fw-semibold">Empresa</label>
+                                <input type="text" id="editEmpresa" class="form-control">
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label fs-7 fw-semibold">Valor (R$)</label>
+                                <input type="number" step="0.01" id="editValor" class="form-control">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label fs-7 fw-semibold">CNPJ</label>
+                            <input type="text" id="editCnpj" class="form-control">
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <label class="form-label fs-7 fw-semibold">Canal</label>
+                                <select id="editOrigem" class="form-select">
+                                    <option value="SITE">Site</option>
+                                    <option value="RD_STATION">RD Station</option>
+                                    <option value="INDICACAO">Indicação</option>
+                                    <option value="EVENTO">Evento</option>
+                                    <option value="OUTRO">Outro</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fs-7 fw-semibold">Etapa do Funil</label>
+                                <select id="editEtapaFunil" class="form-select">
+                                    <option value="NOVO">1. Novo</option>
+                                    <option value="QUALIFICACAO">2. Qualificação</option>
+                                    <option value="PROPOSTA">3. Proposta</option>
+                                    <option value="NEGOCIACAO">4. Negociação</option>
+                                    <option value="FECHAMENTO">5. Fechamento</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fs-7 fw-semibold">Responsável Comercial</label>
+                            <select id="editUsuarioSelect" class="form-select"></select>
+                        </div>
+                        <button type="submit" class="btn btn-indigo w-100 fw-semibold">Salvar Alterações</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL HISTÓRICO -->
+    <div class="modal fade" id="modalHistorico" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content p-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">💬 Histórico de Interações — <span
+                            id="historicoNomeProspect"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formInteracao" class="mb-4 p-3 rounded border" style="background-color: #f5f3f0;">
+                        <input type="hidden" id="interacaoProspectId">
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <select id="interacaoTipo" class="form-select">
+                                    <option value="LIGACAO">📞 Ligação</option>
+                                    <option value="WHATSAPP">💬 WhatsApp</option>
+                                    <option value="EMAIL">✉️ E-mail</option>
+                                    <option value="REUNIAO">🤝 Reunião</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="interacaoDescricao" class="form-control"
+                                    placeholder="Descreva o contato realizado..." required>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-indigo w-100 fw-semibold">Salvar</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="listaInteracoes" class="list-group"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ENCERRAMENTO -->
+    <div class="modal fade" id="modalEncerramento" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content p-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">🏁 Encerrar Oportunidade</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <input type="hidden" id="encerraProspectId">
+                    <p class="text-muted fs-7 mb-4">Selecione o desfecho comercial desta negociação:</p>
+                    <div class="d-flex gap-2 justify-content-center mb-3">
+                        <button type="button" class="btn btn-success w-50 fw-bold"
+                            onclick="definirStatusFinal('GANHO')">✓ Venda Ganha</button>
+                        <button type="button" class="btn btn-outline-danger w-50 fw-bold"
+                            onclick="exibirMotivoPerda()">✕ Venda Perdida</button>
+                    </div>
+                    <div id="divMotivoPerda" class="d-none text-start mt-3 pt-3 border-top">
+                        <label class="form-label fs-7 fw-bold text-danger">Motivo da Perda (Obrigatório) *</label>
+                        <select id="motivoPerdaSelect" class="form-select mb-3">
+                            <option value="PRECO">Preço / Orçamento</option>
+                            <option value="CONCORRENTE">Fechou com Concorrente</option>
+                            <option value="SEM_BUDGET">Sem Budget no Momento</option>
+                            <option value="SEM_INTERESSE">Sem Interesse / Fit</option>
+                            <option value="OUTRO">Outro Motivo</option>
+                        </select>
+                        <button type="button" class="btn btn-danger w-100 fw-semibold"
+                            onclick="definirStatusFinal('PERDIDO')">Confirmar Perda</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="app.js"></script>
 </body>
 
