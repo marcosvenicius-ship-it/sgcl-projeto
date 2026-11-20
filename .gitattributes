@@ -1,7 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
-# Source code files
+# Source code & configuration files
 *.java text eol=lf
 *.js text eol=lf
 *.css text eol=lf
@@ -10,6 +10,15 @@
 *.md text eol=lf
 *.xml text eol=lf
 *.sql text eol=lf
+*.properties text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Maven Wrapper & Shell scripts
+mvnw text eol=lf
+*.sh text eol=lf
+*.cmd text eol=crlf
+*.bat text eol=crlf
 
 # Binary files
 *.png binary
